@@ -1,34 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
-class MyTextField extends StatefulWidget {
+class MyCustomTextField extends StatefulWidget {
   final TextEditingController controller;
   final String hintText;
-  final bool initialObscureText;
 
-  const MyTextField({
-    super.key,
+  const MyCustomTextField({
+    Key? key,
     required this.controller,
     required this.hintText,
-    required this.initialObscureText,
-  });
+  }) : super(key: key);
 
   @override
-  _MyTextFieldState createState() => _MyTextFieldState();
+  _MyCustomTextFieldState createState() => _MyCustomTextFieldState();
 }
 
-class _MyTextFieldState extends State<MyTextField> {
-  late bool _obscureText;
+class _MyCustomTextFieldState extends State<MyCustomTextField> {
+  bool showCheckMark = false;
 
   @override
   void initState() {
     super.initState();
-    _obscureText = widget.initialObscureText;
+    widget.controller.addListener(() {
+      final text = widget.controller.text.toLowerCase();
+      if (text.endsWith("@gmail.com")) {
+        setState(() {
+          showCheckMark = true;
+        });
+      } else {
+        setState(() {
+          showCheckMark = false;
+        });
+      }
+    });
   }
 
-  void _toggleObscureText() {
-    setState(() {
-      _obscureText = !_obscureText;
-    });
+  @override
+  void dispose() {
+    widget.controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -47,20 +57,18 @@ class _MyTextFieldState extends State<MyTextField> {
             Expanded(
               child: TextField(
                 controller: widget.controller,
-                obscureText: _obscureText,
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: widget.hintText,
                 ),
               ),
             ),
-            IconButton(
-              icon: Icon(
-                _obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+            if (showCheckMark)
+              const Icon(
+                Icons.check_circle,
                 size: 18,
+                color: Color.fromARGB(255, 0, 0, 0),
               ),
-              onPressed: _toggleObscureText,
-            ),
           ],
         ),
       ),
