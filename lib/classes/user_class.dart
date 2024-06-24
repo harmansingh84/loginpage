@@ -13,7 +13,7 @@ class UserProfile {
     required this.skills,
   });
 
-  // Convert a UserProfile into a Map. The keys must correspond to the names of the fields in Firestore.
+  
   Map<String, dynamic> toMap() {
     return {
       'firstName': firstName,
@@ -24,7 +24,7 @@ class UserProfile {
     };
   }
 
-  // Create a UserProfile from a Map. This is helpful when retrieving data from Firestore.
+  
   factory UserProfile.fromMap(Map<String, dynamic> map) {
     return UserProfile(
       firstName: map['firstName'],
