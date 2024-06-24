@@ -17,7 +17,7 @@ class SquareTile extends StatelessWidget {
         imagePath,
         height: 20, 
         width: 60,  
-        // the image fits within the container
+        
       ),
     );
   }

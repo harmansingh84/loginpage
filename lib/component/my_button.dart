@@ -21,7 +21,7 @@ class MyButton extends StatelessWidget {//so everytime we use on tap we need to 
           decoration: BoxDecoration(color: Colors.black,
           borderRadius: BorderRadius.circular(10.1),
           ),
-          child: Center(child:Text(text,//we will wrap this in a gesture detector so it can be a button 
+          child: Center(child:Text(text,
           style: TextStyle(color: Colors.white,
           fontWeight: FontWeight.bold,
           fontSize: 16,

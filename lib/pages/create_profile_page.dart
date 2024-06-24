@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:loginapp/classes/firestore.dart';
+import 'package:loginapp/classes/user_class.dart';
 import 'package:loginapp/component/my_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:loginapp/component/profile_page_text_field.dart';
+import 'package:loginapp/pages/home_page.dart';
 
 class CreateProfilePage extends StatefulWidget {
   const CreateProfilePage({super.key});
@@ -15,6 +19,14 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _skillsController = TextEditingController();
+  final user = FirebaseAuth.instance.currentUser!;
+  final FirestoreDatabase _firestoreDatabase = FirestoreDatabase();
+
+  List<String> _skills = [];
+
+  void signUserOut() {
+    FirebaseAuth.instance.signOut();
+  }
 
   @override
   void dispose() {
@@ -78,7 +90,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
               ),
               SizedBox(height: 20),
 
-              // First Name and Last Name Fields
+              
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -88,7 +100,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
                       children: [
                         Row(
                           children: [
-                            SizedBox(width: 15,),
+                            SizedBox(width: 15),
                             Text(
                               "First Name",
                               style: TextStyle(fontWeight: FontWeight.bold),
@@ -99,7 +111,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
                         ProfilePageTextField(
                           controller: _firstnameController,
                           hintText: "",
-                          height: 50, // Set desired height
+                          height: 50, 
                         ),
                       ],
                     ),
@@ -110,7 +122,6 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
-                          
                           children: [
                             SizedBox(width: 15),
                             Text(
@@ -123,7 +134,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
                         ProfilePageTextField(
                           controller: _lastnameController,
                           hintText: "",
-                          height: 50, // Set desired height
+                          height: 50, 
                         ),
                       ],
                     ),
@@ -132,7 +143,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
               ),
               SizedBox(height: 20),
 
-              // Title Field
+             
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -149,13 +160,13 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
                   ProfilePageTextField(
                     controller: _titleController,
                     hintText: "",
-                    height: 50, // Set desired height
+                    height: 50,
                   ),
                 ],
               ),
               SizedBox(height: 20),
 
-              // Description Field
+             
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -169,16 +180,28 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
                     ],
                   ),
                   SizedBox(height: 5),
-                  ProfilePageTextField(
-                    controller: _descriptionController,
-                    hintText: "",
-                    height: 150, // Set desired height
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: TextField(
+                      controller: _descriptionController,
+                      maxLines: null, 
+                      keyboardType: TextInputType.multiline,
+                      decoration: InputDecoration(
+                        hintText: "Write about yourself...",
+                        border: InputBorder.none,
+                      ),
+                      style: TextStyle(fontSize: 16), 
+                    ),
                   ),
                 ],
               ),
               SizedBox(height: 20),
 
-              // Skills Field
+              
               Row(
                 children: [
                   Expanded(
@@ -187,7 +210,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
                       children: [
                         Row(
                           children: [
-                              SizedBox(width: 15),
+                            SizedBox(width: 15),
                             Text(
                               "Skills",
                               style: TextStyle(fontWeight: FontWeight.bold),
@@ -198,7 +221,7 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
                         ProfilePageTextField(
                           controller: _skillsController,
                           hintText: "",
-                          height: 50, // Set desired height
+                          height: 50, 
                         ),
                       ],
                     ),
@@ -207,31 +230,90 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
                   Column(
                     children: [
                       SizedBox(height: 20),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        width: 50,
-                        height: 50,
-                        child: Icon(
-                          Icons.add_box_outlined,
-                          color: Colors.white,
+                      GestureDetector(
+                        onTap: () {
+                          _addSkill();
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          width: 50,
+                          height: 50,
+                          child: Icon(
+                            Icons.add_box_outlined,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ],
               ),
+
+             
+              SizedBox(height: 20),
+              Wrap(
+                spacing: 8.0,
+                runSpacing: 8.0,
+                children: _skills
+                    .map(
+                      (skill) => Container(
+                        padding: EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Text(skill),
+                      ),
+                    )
+                    .toList(),
+              ),
+
               SizedBox(height: 20),
 
-
-              MyButton(onTap: (){}, text: "Upload Profile")
-              // Add more fields or widgets here as needed
+              MyButton(
+                onTap: () async {
+                  await _createProfile();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                  );
+                },
+                text: "Upload Profile",
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void _addSkill() {
+    String skill = _skillsController.text.trim();
+    if (skill.isNotEmpty) {
+      setState(() {
+        _skills.add(skill);
+        _skillsController.clear();
+      });
+    }
+  }
+
+  Future<void> _createProfile() async {
+    String firstName = _firstnameController.text;
+    String lastName = _lastnameController.text;
+    String title = _titleController.text;
+    String aboutMe = _descriptionController.text;
+
+    UserProfile userProfile = UserProfile(
+      firstName: firstName,
+      lastName: lastName,
+      title: title,
+      aboutMe: aboutMe,
+      skills: _skills,
+    );
+
+    await _firestoreDatabase.createProfile(userProfile);
   }
 }

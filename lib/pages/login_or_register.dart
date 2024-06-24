@@ -10,24 +10,66 @@ class LoginOrRegister extends StatefulWidget {
 }
 
 class _LoginOrRegisterState extends State<LoginOrRegister> {
-
-
   bool showLoginPage = true;
 
-
-
-  void togglePages(){
+  void togglePages() {
     setState(() {
       showLoginPage = !showLoginPage;
     });
   }
+
   @override
   Widget build(BuildContext context) {
-    if(showLoginPage){
-        return LoginPage(onTap: togglePages);
-      }
-      else{
-        return RegisterPage(onTap: togglePages,);
-      }
+    if (showLoginPage) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: const LoginPage(), 
+        bottomNavigationBar: TextButton(
+          onPressed: togglePages,
+          child: Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: "Don't have an account? ",
+                  style: TextStyle(color: Colors.black),
+                ),
+                TextSpan(
+                  text: "Sign up",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    } else {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: const RegisterPage(), 
+        bottomNavigationBar: TextButton(
+          onPressed: togglePages,
+          child: Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: "Already have an account? ",
+                  style: TextStyle(color: Colors.black),
+                ),
+                TextSpan(
+                  text: "Log in",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
   }
 }

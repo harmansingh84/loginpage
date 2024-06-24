@@ -34,14 +34,14 @@ class _MyTextFieldState extends State<MyTextField> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(1), // Same padding as the button
+      padding: const EdgeInsets.all(1), 
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: Colors.grey),
         ),
-        padding: EdgeInsets.symmetric(horizontal: 20), // Match button padding
+        padding: EdgeInsets.symmetric(horizontal: 20), 
         child: Row(
           children: [
             Expanded(

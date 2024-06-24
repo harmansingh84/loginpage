@@ -17,7 +17,7 @@ class ProfilePageTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10), // Same padding as the button
+      padding: const EdgeInsets.all(10),
       child: Container(
         width: width,
         height: height,
@@ -26,7 +26,7 @@ class ProfilePageTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: Colors.grey),
         ),
-        padding: EdgeInsets.symmetric(horizontal: 10), // Match button padding
+        padding: EdgeInsets.symmetric(horizontal: 10), 
         child: TextField(
           controller: controller,
           decoration: InputDecoration(

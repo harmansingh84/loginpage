@@ -4,10 +4,11 @@ import 'package:loginapp/component/email_text_field.dart';
 import 'package:loginapp/component/my_button.dart';
 import 'package:loginapp/component/my_textfield.dart';
 import 'package:loginapp/component/square_tile.dart';
+import 'package:loginapp/pages/create_profile_page.dart';
+import 'package:loginapp/pages/login_page.dart';
 
 class RegisterPage extends StatefulWidget {
-  final Function()? onTap;
-  const RegisterPage({super.key, required this.onTap });
+  const RegisterPage({super.key});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -22,7 +23,7 @@ class _RegisterPageState extends State<RegisterPage> {
     showDialog(
       context: context,
       builder: (context) {
-        return Center(child: CircularProgressIndicator());
+        return const Center(child: CircularProgressIndicator());
       },
     );
 
@@ -32,17 +33,25 @@ class _RegisterPageState extends State<RegisterPage> {
           email: usernameController.text,
           password: passwordController.text,
         );
+        Navigator.pop(context); 
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const CreateProfilePage()),
+        );
       } else {
+        Navigator.pop(context); 
         wrongPasswordMessage();
       }
-      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
-      Navigator.pop(context);
+      Navigator.pop(context); 
 
       if (e.code == 'user-not-found') {
         wrongEmailMessage();
       } else if (e.code == 'wrong-password') {
         wrongPasswordMessage();
+      } else {
+        
       }
     }
   }
@@ -113,19 +122,17 @@ class _RegisterPageState extends State<RegisterPage> {
                       const SizedBox(height: 25),
                       Row(
                         children: [
-                          Text("Email ",
-                          ),
+                          const Text("Email"),
                         ],
                       ),
-                      // Username text field
+                      
                       MyCustomTextField(controller: usernameController, hintText: "example@gmail.com"),
 
                       const SizedBox(height: 20),
-                      // Password text field
+                      
                       Row(
                         children: [
-                          Text("Create a password",
-                          ),
+                          const Text("Create a password"),
                         ],
                       ),
                       MyTextField(
@@ -134,11 +141,10 @@ class _RegisterPageState extends State<RegisterPage> {
                         initialObscureText: true,
                       ),
                       const SizedBox(height: 20),
-                      // Confirm Password text field
+                      
                       Row(
                         children: [
-                          Text("confirm password",
-                          ),
+                          const Text("Confirm password"),
                         ],
                       ),
                       MyTextField(
@@ -146,15 +152,14 @@ class _RegisterPageState extends State<RegisterPage> {
                         hintText: 'repeat password',
                         initialObscureText: true,
                       ),
-                      // Forgot password
-                      SizedBox(height: 30),
-                      // Sign up button
+                      const SizedBox(height: 30),
+                     
                       MyButton(
                         text: "Register",
                         onTap: signUserUp,
                       ),
                       const SizedBox(height: 20),
-                      // Or continue with
+                     
                       Row(
                         children: [
                           const Expanded(
@@ -179,7 +184,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         ],
                       ),
                       const SizedBox(height: 20),
-                      // Google + Apple sign in buttons
+                      
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -189,7 +194,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         ],
                       ),
                       const SizedBox(height: 50),
-                      // Already have an account? Log in
+                      
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -197,14 +202,18 @@ class _RegisterPageState extends State<RegisterPage> {
                             "Already have an account?",
                             style: TextStyle(
                               color: Colors.black,
-                              
                             ),
                           ),
-                          SizedBox(width: 8),
+                          const SizedBox(width: 8),
                           GestureDetector(
-                            onTap: widget.onTap,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => LoginPage()),
+                              );
+                            },
                             child: const Text(
-                              "Log In",
+                              "Login",
                               style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,

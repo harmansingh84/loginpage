@@ -4,10 +4,11 @@ import 'package:loginapp/component/email_text_field.dart';
 import 'package:loginapp/component/my_button.dart';
 import 'package:loginapp/component/my_textfield.dart';
 import 'package:loginapp/component/square_tile.dart';
+import 'package:loginapp/pages/home_page.dart';
+import 'package:loginapp/pages/register_page.dart';
 
 class LoginPage extends StatefulWidget {
-  final Function()? onTap;
-  const LoginPage({super.key, required this.onTap});
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -21,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
     showDialog(
       context: context,
       builder: (context) {
-        return Center(
+        return const Center(
           child: CircularProgressIndicator(),
         );
       },
@@ -33,6 +34,10 @@ class _LoginPageState extends State<LoginPage> {
         password: passwordController.text,
       );
       Navigator.pop(context);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
       if (e.code == 'user-not-found') {
@@ -94,9 +99,9 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       const SizedBox(height: 100),
-                      Row(
+                      const Row(
                         children: [
-                          const Text(
+                          Text(
                             "Log in",
                             style: TextStyle(
                               fontSize: 25,
@@ -107,49 +112,49 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                       const SizedBox(height: 25),
-                      Row(
+                      const Row(
                         children: [
-                          Text("Email adress",
-                          ),
+                          Text("Email address"),
                         ],
                       ),
-                      // Username text field
-                     MyCustomTextField(controller: usernameController, hintText: "example@gmail.com"),
+                      
+                      MyCustomTextField(
+                          controller: usernameController,
+                          hintText: "example@gmail.com"),
                       const SizedBox(height: 15),
-                      // Password text field
-                      Row(
+                      
+                      const Row(
                         children: [
-                          Text("Password",
-                          ),
+                          Text("Password"),
                         ],
                       ),
                       MyTextField(
                         controller: passwordController,
                         hintText: 'Password',
-                      initialObscureText: false,                      
+                        initialObscureText: true,
                       ),
-                      // Forgot password
+                      
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
+                          children: const [
                             Text(
                               "Forgot Password?",
                               style: TextStyle(
-                                color: const Color.fromARGB(255, 0, 0, 0),
+                                color: Color.fromARGB(255, 0, 0, 0),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      // Sign in button
+                      
                       MyButton(
                         text: "Log In",
                         onTap: signUserIn,
                       ),
                       const SizedBox(height: 20),
-                      // Or continue with
+                     
                       Row(
                         children: [
                           const Expanded(
@@ -174,7 +179,7 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                       const SizedBox(height: 20),
-                      // Google + Apple sign in buttons
+                      
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -183,8 +188,8 @@ class _LoginPageState extends State<LoginPage> {
                           SquareTile(imagePath: 'lib/images/apple.png'),
                         ],
                       ),
-                      const SizedBox(height: 120),
-                      // Not a member? Register now
+                      const SizedBox(height: 135),
+                      
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -194,9 +199,14 @@ class _LoginPageState extends State<LoginPage> {
                               color: Colors.black,
                             ),
                           ),
-                          SizedBox(width: 8),
+                          const SizedBox(width: 8),
                           GestureDetector(
-                            onTap: widget.onTap,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => RegisterPage()),
+                              );
+                            },
                             child: const Text(
                               "Sign up",
                               style: TextStyle(
